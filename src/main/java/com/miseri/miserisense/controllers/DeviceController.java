@@ -28,9 +28,9 @@ public class DeviceController {
         return  service.get(id).apply();
     }
 
-    @DeleteMapping("/{idUser}")
-    public void delete(@PathVariable Long idUser){
-        service.delete(idUser);
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id){
+        service.delete(id);
     }
 
     @GetMapping("/health")

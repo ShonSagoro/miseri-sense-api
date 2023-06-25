@@ -30,15 +30,15 @@ public class UserController {
         return  service.get(request.getEmail()).apply();
     }
 
-    @PutMapping("/{idUser}")
+    @PutMapping("/{id}")
     public ResponseEntity<BaseResponse> update(@RequestBody UpdateUserRequest request,
-                                               @PathVariable Long idUser){
-        return service.update(request, idUser).apply();
+                                               @PathVariable Long id){
+        return service.update(request, id).apply();
     }
 
-    @DeleteMapping("/{idUser}")
-    public void delete(@PathVariable Long idUser){
-        service.delete(idUser);
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id){
+        service.delete(id);
     }
 
     @GetMapping("/health")
