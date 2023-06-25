@@ -11,10 +11,12 @@ import com.miseri.miserisense.repositories.IDeviceRepository;
 import com.miseri.miserisense.services.Interface.IDeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class DeviceServiceImpl implements IDeviceService {
     @Autowired
     private IDeviceRepository repository;

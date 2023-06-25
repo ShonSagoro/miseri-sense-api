@@ -1,17 +1,17 @@
 package com.miseri.miserisense.controllers;
 
-import com.miseri.miserisense.controllers.dtos.request.CreateDeviceRequest;
+import com.miseri.miserisense.controllers.dtos.request.*;
 import com.miseri.miserisense.controllers.dtos.response.BaseResponse;
-import com.miseri.miserisense.services.Interface.IDeviceService;
+import com.miseri.miserisense.services.Interface.ISensorDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/device")
-public class DeviceController {
+@RequestMapping("/sensor")
+public class SensorDataController {
     @Autowired
-    private IDeviceService service;
+    private ISensorDataService service;
 
     @GetMapping
     public ResponseEntity<BaseResponse> getAll(){
@@ -19,13 +19,19 @@ public class DeviceController {
     }
 
     @PostMapping()
-    public ResponseEntity<BaseResponse> create(@RequestBody CreateDeviceRequest request){
+    public ResponseEntity<BaseResponse> create(@RequestBody CreateSensorDataRequest request){
         return service.create(request).apply();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<BaseResponse> get( @PathVariable Long id){
         return  service.get(id).apply();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<BaseResponse> update(@RequestBody UpdateSensorDataRequest request,
+                                               @PathVariable Long id){
+        return service.update(request, id).apply();
     }
 
     @DeleteMapping("/{id}")

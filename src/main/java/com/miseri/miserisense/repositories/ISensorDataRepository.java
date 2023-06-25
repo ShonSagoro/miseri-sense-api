@@ -1,9 +1,9 @@
 package com.miseri.miserisense.repositories;
 
-import com.miseri.miserisense.models.Device;
+import com.miseri.miserisense.models.SensorData;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface IDeviceRepository extends MongoRepository<Device, Long> {
+public interface ISensorDataRepository extends MongoRepository<SensorData,Long> {
 }
