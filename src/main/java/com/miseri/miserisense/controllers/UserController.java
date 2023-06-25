@@ -5,14 +5,12 @@ import com.miseri.miserisense.controllers.dtos.request.LoginRequest;
 import com.miseri.miserisense.controllers.dtos.request.UpdateUserRequest;
 import com.miseri.miserisense.controllers.dtos.response.BaseResponse;
 import com.miseri.miserisense.services.Interface.IUserService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user")
-@Slf4j
 public class UserController {
     @Autowired
     private IUserService service;
@@ -24,7 +22,6 @@ public class UserController {
 
     @PostMapping("/reg")
     public ResponseEntity<BaseResponse> create(@RequestBody CreateUserRequest request){
-        log.info("ENTRE");
         return service.create(request).apply();
     }
 
