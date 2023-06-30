@@ -2,14 +2,20 @@ package com.miseri.miserisense.services;
 
 import com.miseri.miserisense.controllers.advice.exceptions.NotFoundException;
 import com.miseri.miserisense.controllers.dtos.request.CreateUserRequest;
+import com.miseri.miserisense.controllers.dtos.request.SingInRequest;
 import com.miseri.miserisense.controllers.dtos.request.UpdateUserRequest;
 import com.miseri.miserisense.controllers.dtos.response.BaseResponse;
 import com.miseri.miserisense.controllers.dtos.response.GetUserResponse;
+import com.miseri.miserisense.controllers.dtos.response.SingInResponse;
+import com.miseri.miserisense.controllers.dtos.response.SingUpResponse;
 import com.miseri.miserisense.models.User;
 import com.miseri.miserisense.repositories.IUserRepository;
+import com.miseri.miserisense.security.user.UserDetailsImpl;
 import com.miseri.miserisense.services.Interface.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +26,13 @@ public class UserServiceImpl implements IUserService {
 
     @Autowired
     private IUserRepository repository;
+
+    @Autowired
+    private IJwtServices jwtServices;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
     @Autowired
     private SequenceGeneratorServiceImpl sequenceGeneratorService;
 
@@ -28,6 +41,7 @@ public class UserServiceImpl implements IUserService {
     public BaseResponse get(String email) {
         User user = repository.findByEmail(email)
                 .orElseThrow(NotFoundException::new);
+
         GetUserResponse response=toGetUserResponse(user);
         return BaseResponse.builder()
                 .data(response)
@@ -39,13 +53,32 @@ public class UserServiceImpl implements IUserService {
     @Override
     public BaseResponse create(CreateUserRequest request) {
         User user = repository.save(toUser(request));
-        GetUserResponse response= toGetUserResponse(user);
-
+        UserDetailsImpl userDetails=new UserDetailsImpl(user);
+        String jwt= jwtServices.generateToken(userDetails);
+        SingUpResponse response=toSingUpResponse(user, jwt);
         return BaseResponse.builder()
                 .data(response)
                 .message("The user has been created with id: "+ response.getId())
                 .success(true)
                 .httpStatus(HttpStatus.CREATED).build();
+    }
+
+    @Override
+    public BaseResponse singin(SingInRequest request) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+        User user = repository.findByEmail(request.getEmail())
+                .orElseThrow(NotFoundException::new);
+        UserDetailsImpl userDetails=new UserDetailsImpl(user);
+        String jwt= jwtServices.generateToken(userDetails);
+        SingInResponse response=toSingInResponse(user,jwt);
+        return BaseResponse.builder()
+                .data(response)
+                .message("The user has been sing-in with email: "+ response.getId())
+                .success(true)
+                .httpStatus(HttpStatus.CREATED).build();
+
+
     }
 
     @Override
@@ -78,6 +111,12 @@ public class UserServiceImpl implements IUserService {
         repository.deleteById(id);
     }
 
+    @Override
+    public User getUserByEmail(String email) {
+        return repository.findByEmail(email)
+                .orElseThrow(NotFoundException::new);
+    }
+
 
     private User update(User user, UpdateUserRequest update){
         user.setEmail(update.getEmail());
@@ -91,6 +130,28 @@ public class UserServiceImpl implements IUserService {
         response.setId(user.getId());
         response.setEmail(user.getEmail());
         response.setName(user.getName());
+
+        return response;
+    }
+
+    private SingInResponse toSingInResponse(User user, String jwt){
+
+        SingInResponse response= new SingInResponse();
+        response.setId(user.getId());
+        response.setEmail(user.getEmail());
+        response.setName(user.getName());
+        response.setToken(jwt);
+
+        return response;
+    }
+
+    private SingUpResponse toSingUpResponse(User user, String jwt){
+
+        SingUpResponse response= new SingUpResponse();
+        response.setId(user.getId());
+        response.setEmail(user.getEmail());
+        response.setName(user.getName());
+        response.setToken(jwt);
 
         return response;
     }
