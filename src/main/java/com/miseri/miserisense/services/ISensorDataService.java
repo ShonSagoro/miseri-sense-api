@@ -1,4 +1,4 @@
-package com.miseri.miserisense.services.Interface;
+package com.miseri.miserisense.services;
 
 import com.miseri.miserisense.controllers.dtos.request.CreateSensorDataRequest;
 import com.miseri.miserisense.controllers.dtos.request.UpdateSensorDataRequest;

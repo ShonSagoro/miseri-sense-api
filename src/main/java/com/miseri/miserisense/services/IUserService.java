@@ -1,7 +1,6 @@
-package com.miseri.miserisense.services.Interface;
+package com.miseri.miserisense.services;
 
 import com.miseri.miserisense.controllers.dtos.request.CreateUserRequest;
-import com.miseri.miserisense.controllers.dtos.request.SingInRequest;
 import com.miseri.miserisense.controllers.dtos.request.UpdateUserRequest;
 import com.miseri.miserisense.controllers.dtos.response.BaseResponse;
 import com.miseri.miserisense.models.User;
@@ -11,7 +10,6 @@ public interface IUserService {
 
     BaseResponse create(CreateUserRequest request);
 
-    BaseResponse singin(SingInRequest request);
 
     BaseResponse update(UpdateUserRequest request, Long idUser);
 

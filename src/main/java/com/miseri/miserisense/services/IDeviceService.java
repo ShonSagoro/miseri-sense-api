@@ -1,4 +1,4 @@
-package com.miseri.miserisense.services.Interface;
+package com.miseri.miserisense.services;
 
 import com.miseri.miserisense.controllers.dtos.request.CreateDeviceRequest;
 import com.miseri.miserisense.controllers.dtos.response.BaseResponse;

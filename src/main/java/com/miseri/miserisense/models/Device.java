@@ -17,4 +17,5 @@ public class Device {
     private Long id;
 
     private Long userId;
+
 }
