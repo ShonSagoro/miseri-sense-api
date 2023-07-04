@@ -1,17 +1,13 @@
-package com.miseri.miserisense.services;
+package com.miseri.miserisense.services.Impls;
 
 import com.miseri.miserisense.controllers.advice.exceptions.NotFoundException;
 import com.miseri.miserisense.controllers.dtos.request.CreateSensorDataRequest;
-import com.miseri.miserisense.controllers.dtos.request.CreateUserRequest;
 import com.miseri.miserisense.controllers.dtos.request.UpdateSensorDataRequest;
-import com.miseri.miserisense.controllers.dtos.request.UpdateUserRequest;
 import com.miseri.miserisense.controllers.dtos.response.BaseResponse;
 import com.miseri.miserisense.controllers.dtos.response.GetSensorDataResponse;
-import com.miseri.miserisense.controllers.dtos.response.GetUserResponse;
 import com.miseri.miserisense.models.SensorData;
-import com.miseri.miserisense.models.User;
 import com.miseri.miserisense.repositories.ISensorDataRepository;
-import com.miseri.miserisense.services.Interface.ISensorDataService;
+import com.miseri.miserisense.services.ISensorDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

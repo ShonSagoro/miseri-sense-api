@@ -2,7 +2,7 @@ package com.miseri.miserisense.controllers;
 
 import com.miseri.miserisense.controllers.dtos.request.CreateDeviceRequest;
 import com.miseri.miserisense.controllers.dtos.response.BaseResponse;
-import com.miseri.miserisense.services.Interface.IDeviceService;
+import com.miseri.miserisense.services.IDeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

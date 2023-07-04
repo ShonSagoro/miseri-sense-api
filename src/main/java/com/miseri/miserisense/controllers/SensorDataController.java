@@ -2,7 +2,7 @@ package com.miseri.miserisense.controllers;
 
 import com.miseri.miserisense.controllers.dtos.request.*;
 import com.miseri.miserisense.controllers.dtos.response.BaseResponse;
-import com.miseri.miserisense.services.Interface.ISensorDataService;
+import com.miseri.miserisense.services.ISensorDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
