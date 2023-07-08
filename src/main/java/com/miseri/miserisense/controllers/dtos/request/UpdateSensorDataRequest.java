@@ -1,5 +1,6 @@
 package com.miseri.miserisense.controllers.dtos.request;
 
+import com.miseri.miserisense.models.SensorData;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,15 +8,11 @@ import lombok.Setter;
 @Setter
 public class UpdateSensorDataRequest {
 
-    private Float humedityPercentage;
+    private SensorData.AirData air;
 
-    private Float light;
+    private SensorData.LightData light;
 
-    private Float airQuality;
+    private SensorData.HumidityTemperatureData humTemp;
 
-    private Float temperature;
 
-    private Float gas;
-
-    private String date;
 }

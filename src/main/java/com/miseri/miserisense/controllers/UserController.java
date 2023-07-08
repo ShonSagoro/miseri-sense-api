@@ -1,5 +1,6 @@
 package com.miseri.miserisense.controllers;
 
+import com.miseri.miserisense.configuration.SocketIOClient;
 import com.miseri.miserisense.controllers.dtos.request.CreateUserRequest;
 import com.miseri.miserisense.controllers.dtos.request.LoginRequest;
 import com.miseri.miserisense.controllers.dtos.request.UpdateUserRequest;
@@ -15,6 +16,9 @@ public class UserController {
     @Autowired
     private IUserService service;
 
+    @Autowired
+    private SocketIOClient socketIOClient;
+
     @GetMapping
     public ResponseEntity<BaseResponse> getAll(){
         return service.getAll().apply();
@@ -27,6 +31,7 @@ public class UserController {
 
     @PostMapping("/email")
     public ResponseEntity<BaseResponse> get(@RequestBody LoginRequest request){
+        socketIOClient.sendMessage(request.getEmail());
         return  service.get(request.getEmail()).apply();
     }
 

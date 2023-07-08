@@ -1,6 +1,6 @@
 package com.miseri.miserisense.models;
 
-
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
@@ -17,17 +17,33 @@ public class SensorData {
     @Id
     private Long id;
 
-    private Float humedityPercentage;
+    private AirData air;
 
-    private Float light;
+    private LightData light;
 
-    private Float airQuality;
-
-    private Float temperature;
-
-    private Float gas;
+    private HumidityTemperatureData humTemp;
 
     private String date;
 
+    private String session;
+
     private Long deviceId;
+
+    @Getter @Setter
+    public static class AirData {
+        private double gasPmm;
+        private double coPmm;
+    }
+
+    @Getter @Setter
+    public static class LightData {
+        private double raw;
+        private int percent;
+    }
+
+    @Getter @Setter
+    public static class HumidityTemperatureData {
+        private double temperature;
+        private double humidity;
+    }
 }
