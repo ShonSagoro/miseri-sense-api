@@ -55,7 +55,7 @@ public class UserAuthenticationFilter extends UsernamePasswordAuthenticationFilt
 
 
         BaseResponse baseResponse=  BaseResponse.builder()
-                .data("bearer token: " + token)
+                .data("Bearer " + token)
                 .message("Successfully authentication")
                 .success(true)
                 .httpStatus(HttpStatus.OK).build();

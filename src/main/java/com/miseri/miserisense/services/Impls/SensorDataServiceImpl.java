@@ -73,18 +73,66 @@ public class SensorDataServiceImpl implements ISensorDataService {
     }
 
     @Override
+    public List<SensorData> getAllData() {
+        return repository.findAll();
+    }
+
+    @Override
     public void delete(long id) {
         repository.deleteById(id);
     }
 
+    @Override
+    public List<Double> getAllGas() {
+        return repository.findAll().stream().map(this::getGas).toList();
+    }
+
+    @Override
+    public List<Double> getAllQualityAir() {
+        return repository.findAll().stream().map(this::getQualityAir).toList();
+    }
+
+    @Override
+    public List<Double> getAllLight() {
+        return repository.findAll().stream().map(this::getLight).toList();
+    }
+
+    @Override
+    public List<Double> getAllTemperature() {
+        return repository.findAll().stream().map(this::getTemperature).toList();
+    }
+
+    @Override
+    public List<Double> getAllHumidity() {
+        return repository.findAll().stream().map(this::getHumidity).toList();
+    }
+
+
+    private Double getGas(SensorData sensorData){
+        return sensorData.getAir().getGasPmm();
+    }
+
+    private Double getQualityAir(SensorData sensorData){
+        return sensorData.getAir().getCoPmm();
+    }
+
+    private Double getHumidity(SensorData sensorData){
+        return sensorData.getHumTemp().getHumidity();
+    }
+
+    private Double getTemperature(SensorData sensorData){
+        return sensorData.getHumTemp().getTemperature();
+    }
+
+    private Double getLight(SensorData sensorData){
+        return sensorData.getLight().getRaw();
+    }
+
 
     private SensorData update(SensorData sensorData, UpdateSensorDataRequest update){
-        sensorData.setHumedityPercentage(update.getHumedityPercentage());
+        sensorData.setAir(update.getAir());
         sensorData.setLight(update.getLight());
-        sensorData.setAirQuality(update.getAirQuality());
-        sensorData.setTemperature(update.getTemperature());
-        sensorData.setGas(update.getGas());
-        sensorData.setDate(update.getDate());
+        sensorData.setHumTemp(update.getHumTemp());
         return sensorData;
     }
 
@@ -92,26 +140,24 @@ public class SensorDataServiceImpl implements ISensorDataService {
 
         GetSensorDataResponse response= new GetSensorDataResponse();
         response.setId(sensorData.getId());
-        response.setHumedityPercentage(sensorData.getHumedityPercentage());
+        response.setAir(sensorData.getAir());
+        response.setHumTemp(sensorData.getHumTemp());
         response.setLight(sensorData.getLight());
-        response.setAirQuality(sensorData.getAirQuality());
-        response.setTemperature(sensorData.getTemperature());
-        response.setGas(sensorData.getGas());
         response.setDate(sensorData.getDate());
         response.setDeviceId(sensorData.getDeviceId());
+        response.setSession(sensorData.getSession());
         return response;
     }
 
     private SensorData toSensorData(CreateSensorDataRequest request){
         SensorData sensorData = new SensorData();
         sensorData.setId(sequenceGeneratorService.generateSequence(SensorData.SEQUENCE_NAME));
-        sensorData.setHumedityPercentage(request.getHumedityPercentage());
+        sensorData.setAir(request.getAir());
         sensorData.setLight(request.getLight());
-        sensorData.setAirQuality(request.getAirQuality());
-        sensorData.setTemperature(request.getTemperature());
-        sensorData.setGas(request.getGas());
+        sensorData.setHumTemp(request.getHumTemp());
         sensorData.setDate(request.getDate());
         sensorData.setDeviceId(request.getDeviceId());
+        sensorData.setSession(request.getSession());
         return sensorData;
     }
 }
