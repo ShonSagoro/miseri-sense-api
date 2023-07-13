@@ -16,9 +16,6 @@ public class UserController {
     @Autowired
     private IUserService service;
 
-    @Autowired
-    private SocketIOClient socketIOClient;
-
     @GetMapping
     public ResponseEntity<BaseResponse> getAll(){
         return service.getAll().apply();
@@ -31,7 +28,6 @@ public class UserController {
 
     @PostMapping("/email")
     public ResponseEntity<BaseResponse> get(@RequestBody LoginRequest request){
-        socketIOClient.sendMessage(request.getEmail());
         return  service.get(request.getEmail()).apply();
     }
 

@@ -1,5 +1,6 @@
 package com.miseri.miserisense.controllers;
 
+import com.miseri.miserisense.configuration.SocketIOClient;
 import com.miseri.miserisense.controllers.dtos.request.*;
 import com.miseri.miserisense.controllers.dtos.response.BaseResponse;
 import com.miseri.miserisense.services.intefaces.ISensorDataService;

@@ -1,5 +1,7 @@
 package com.miseri.miserisense.configuration;
 
+import com.miseri.miserisense.controllers.dtos.response.BaseResponse;
+import com.miseri.miserisense.controllers.dtos.response.GetSensorDataResponse;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -34,8 +36,12 @@ public class SocketIOClient {
         }
     }
 
-    public void sendMessage(String message) {
-        socket.emit("message", message);
+    public void sendData(String data) {
+        socket.emit("updateData", data);
+    }
+
+    public void sendListData(String data) {
+        socket.emit("updateListData", data);
     }
 }
 

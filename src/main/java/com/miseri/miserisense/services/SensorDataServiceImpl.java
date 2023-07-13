@@ -1,5 +1,7 @@
 package com.miseri.miserisense.services;
 
+import com.google.gson.Gson;
+import com.miseri.miserisense.configuration.SocketIOClient;
 import com.miseri.miserisense.controllers.advice.exceptions.NotFoundException;
 import com.miseri.miserisense.controllers.dtos.request.CreateSensorDataRequest;
 import com.miseri.miserisense.controllers.dtos.request.UpdateSensorDataRequest;
@@ -21,6 +23,9 @@ public class SensorDataServiceImpl implements ISensorDataService {
     private ISensorDataRepository repository;
 
     @Autowired
+    private SocketIOClient client;
+
+    @Autowired
     private SequenceGeneratorServiceImpl sequenceGeneratorService;
 
     @Override
@@ -39,7 +44,7 @@ public class SensorDataServiceImpl implements ISensorDataService {
     public BaseResponse create(CreateSensorDataRequest request) {
         SensorData sensorData = repository.save(toSensorData(request));
         GetSensorDataResponse response= toGetSensorDataResponse(sensorData);
-
+        client.sendData(toJson(response));
         return BaseResponse.builder()
                 .data(response)
                 .message("The sensor data has been created with id: "+ response.getId())
@@ -52,7 +57,7 @@ public class SensorDataServiceImpl implements ISensorDataService {
         List<SensorData> listSave=request.stream().map(this::toSensorData).toList();
         listSave.forEach(sensorData -> repository.save(sensorData));
         List<GetSensorDataResponse> responses=listSave.stream().map(this::toGetSensorDataResponse).toList();
-
+        client.sendListData(toJson(responses));
         return BaseResponse.builder()
                 .data(responses)
                 .message("All data sensor saved bro")
@@ -211,5 +216,15 @@ public class SensorDataServiceImpl implements ISensorDataService {
         sensorData.setDeviceId(request.getDeviceId());
         sensorData.setSession(request.getSession());
         return sensorData;
+    }
+
+    private String toJson(GetSensorDataResponse response){
+        Gson gson = new Gson();
+        return gson.toJson(response);
+    }
+
+    private String toJson(List<GetSensorDataResponse> response){
+        Gson gson = new Gson();
+        return gson.toJson(response);
     }
 }
