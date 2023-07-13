@@ -5,7 +5,7 @@ import com.miseri.miserisense.controllers.dtos.request.CreateUserRequest;
 import com.miseri.miserisense.controllers.dtos.request.LoginRequest;
 import com.miseri.miserisense.controllers.dtos.request.UpdateUserRequest;
 import com.miseri.miserisense.controllers.dtos.response.BaseResponse;
-import com.miseri.miserisense.services.IUserService;
+import com.miseri.miserisense.services.intefaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

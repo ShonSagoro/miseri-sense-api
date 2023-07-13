@@ -1,7 +1,7 @@
 package com.miseri.miserisense.configuration.security.user;
 
 import com.miseri.miserisense.models.User;
-import com.miseri.miserisense.services.IUserService;
+import com.miseri.miserisense.services.intefaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

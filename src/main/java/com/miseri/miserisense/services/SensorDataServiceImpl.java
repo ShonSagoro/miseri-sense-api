@@ -1,4 +1,4 @@
-package com.miseri.miserisense.services.Impls;
+package com.miseri.miserisense.services;
 
 import com.miseri.miserisense.controllers.advice.exceptions.NotFoundException;
 import com.miseri.miserisense.controllers.dtos.request.CreateSensorDataRequest;
@@ -7,7 +7,7 @@ import com.miseri.miserisense.controllers.dtos.response.BaseResponse;
 import com.miseri.miserisense.controllers.dtos.response.GetSensorDataResponse;
 import com.miseri.miserisense.models.SensorData;
 import com.miseri.miserisense.repositories.ISensorDataRepository;
-import com.miseri.miserisense.services.ISensorDataService;
+import com.miseri.miserisense.services.intefaces.ISensorDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -48,6 +48,19 @@ public class SensorDataServiceImpl implements ISensorDataService {
     }
 
     @Override
+    public BaseResponse createList(List<CreateSensorDataRequest> request) {
+        List<SensorData> listSave=request.stream().map(this::toSensorData).toList();
+        listSave.forEach(sensorData -> repository.save(sensorData));
+        List<GetSensorDataResponse> responses=listSave.stream().map(this::toGetSensorDataResponse).toList();
+
+        return BaseResponse.builder()
+                .data(responses)
+                .message("All data sensor saved bro")
+                .success(true)
+                .httpStatus(HttpStatus.CREATED).build();
+    }
+
+    @Override
     public BaseResponse update(UpdateSensorDataRequest request, Long id) {
         SensorData sensorData = repository.findById(id).orElseThrow(RuntimeException::new);
         SensorData sensorDataSave = repository.save(update(sensorData, request));
@@ -57,6 +70,44 @@ public class SensorDataServiceImpl implements ISensorDataService {
                 .message("The sensor data has been updated with id: "+ response.getId())
                 .success(true)
                 .httpStatus(HttpStatus.ACCEPTED).build();
+    }
+
+    @Override
+    public BaseResponse getAllBySession(String session) {
+        List<GetSensorDataResponse> responses=repository.findBySession(session)
+                .stream()
+                .map(this::toGetSensorDataResponse)
+                .toList();
+
+        return BaseResponse.builder()
+                .data(responses)
+                .message("The sensor data has been found with the session"+ session)
+                .success(true)
+                .httpStatus(HttpStatus.OK).build();
+    }
+
+    @Override
+    public BaseResponse getAllByDate(String date) {
+        List<GetSensorDataResponse> responses=repository.findByDate(date)
+                .stream()
+                .map(this::toGetSensorDataResponse)
+                .toList();
+
+        return BaseResponse.builder()
+                .data(responses)
+                .message("The sensor data has been found with the date"+ date)
+                .success(true)
+                .httpStatus(HttpStatus.OK).build();
+    }
+
+    @Override
+    public List<SensorData> getListBySession(String session) {
+        return repository.findBySession(session);
+    }
+
+    @Override
+    public List<SensorData> getListByDate(String date) {
+        return repository.findByDate(date);
     }
 
     @Override
@@ -148,6 +199,7 @@ public class SensorDataServiceImpl implements ISensorDataService {
         response.setSession(sensorData.getSession());
         return response;
     }
+
 
     private SensorData toSensorData(CreateSensorDataRequest request){
         SensorData sensorData = new SensorData();

@@ -1,4 +1,4 @@
-package com.miseri.miserisense.services.Impls;
+package com.miseri.miserisense.services;
 
 import com.miseri.miserisense.controllers.advice.exceptions.NotFoundException;
 import com.miseri.miserisense.controllers.dtos.request.CreateUserRequest;
@@ -7,13 +7,14 @@ import com.miseri.miserisense.controllers.dtos.response.BaseResponse;
 import com.miseri.miserisense.controllers.dtos.response.GetUserResponse;
 import com.miseri.miserisense.models.User;
 import com.miseri.miserisense.repositories.IUserRepository;
-import com.miseri.miserisense.services.IUserService;
+import com.miseri.miserisense.services.intefaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,6 +45,11 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public BaseResponse create(CreateUserRequest request) {
+        Optional<User> possibleCopy = repository.findByEmail(request.getEmail());
+
+        if(possibleCopy.isPresent()){
+            throw new RuntimeException("the user exist"); // (RegisterException)
+        }
         User user = repository.save(toUser(request));
         GetUserResponse response=toGetUserResponse(user);
         return BaseResponse.builder()

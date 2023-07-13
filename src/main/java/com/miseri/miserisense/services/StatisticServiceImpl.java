@@ -1,10 +1,12 @@
-package com.miseri.miserisense.services.Impls;
+package com.miseri.miserisense.services;
 
+import com.miseri.miserisense.controllers.dtos.request.CorrelationRequest;
 import com.miseri.miserisense.controllers.dtos.response.BaseResponse;
 import com.miseri.miserisense.controllers.dtos.response.DataFrequencyTableResponse;
 import com.miseri.miserisense.controllers.dtos.response.FrequencyResponse;
-import com.miseri.miserisense.services.ISensorDataService;
-import com.miseri.miserisense.services.IStatisticService;
+import com.miseri.miserisense.controllers.dtos.response.GetCorrelationResponse;
+import com.miseri.miserisense.services.intefaces.ISensorDataService;
+import com.miseri.miserisense.services.intefaces.IStatisticService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -82,6 +84,62 @@ public class StatisticServiceImpl implements IStatisticService {
                 .success(true)
                 .httpStatus(HttpStatus.OK).build();
     }
+
+    @Override
+    public BaseResponse getCorrelation(CorrelationRequest request) {
+        balanceArrangements(request);
+        GetCorrelationResponse response=new GetCorrelationResponse();
+        response.setCorrelation(madeCalculateOfCorrelaion(request));
+        return BaseResponse.builder()
+                .data(response)
+                .message("The correlation is: "+response.getCorrelation())
+                .success(true)
+                .httpStatus(HttpStatus.OK).build();
+    }
+
+
+    private void balanceArrangements(CorrelationRequest request){
+        if(request.getXdata().size()!=request.getYdata().size()){
+            int maxIndex=Math.max(request.getXdata().size(),request.getYdata().size());
+            int maxXIndex=maxIndex-request.getXdata().size();
+            int maxYIndex=maxIndex-request.getYdata().size();
+            balance(request.getYdata(), maxYIndex);
+            balance(request.getXdata(), maxXIndex);
+        }
+    }
+
+    private void balance(List<Double> list, int maxIndex){
+        for ( int i= 0;  i<maxIndex ; ++i) {
+            list.add(0.0);
+        }
+    }
+    private Double madeCalculateOfCorrelaion(CorrelationRequest request){
+        double xMedia=getAritmethicMediaCorrelation(request.getXdata());
+        double yMedia=getAritmethicMediaCorrelation(request.getYdata());
+        Double typicalDeviationX=0.0;
+        Double typicalDeviationY=0.0;
+        Double typicalDeviationXY=0.0;
+        int maxIndex=Math.max(request.getXdata().size(),request.getYdata().size());
+        for (int i=0; i<maxIndex;i++) {
+            typicalDeviationX+=Math.pow(request.getXdata().get(i)-xMedia, 2);
+            typicalDeviationY+=Math.pow(request.getYdata().get(i)-yMedia,2);
+            typicalDeviationXY+=(request.getXdata().get(i)-xMedia)*(request.getYdata().get(i)-yMedia);
+
+        }
+        Double result= typicalDeviationXY/Math.sqrt(typicalDeviationX*typicalDeviationY);
+        return roundUnit(result, 4);
+    }
+
+
+    private Double getAritmethicMediaCorrelation(List<Double> list){
+        double sum=0.0;
+        for (Double number:list) {
+            sum+=number;
+        }
+        return roundUnit(sum/list.size(), 4);
+    }
+
+
 
     private List<FrequencyResponse> getListFrequency(){
         List<FrequencyResponse> response= new ArrayList<>();

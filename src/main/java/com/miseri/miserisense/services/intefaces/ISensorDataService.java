@@ -1,4 +1,4 @@
-package com.miseri.miserisense.services;
+package com.miseri.miserisense.services.intefaces;
 
 import com.miseri.miserisense.controllers.dtos.request.CreateSensorDataRequest;
 import com.miseri.miserisense.controllers.dtos.request.UpdateSensorDataRequest;
@@ -12,9 +12,20 @@ public interface ISensorDataService {
 
     BaseResponse create(CreateSensorDataRequest request);
 
+    BaseResponse createList(List<CreateSensorDataRequest> request);
+
     BaseResponse update(UpdateSensorDataRequest request, Long idUser);
 
     BaseResponse getAll();
+
+    BaseResponse getAllBySession(String session);
+
+    BaseResponse getAllByDate(String date);
+
+
+    List<SensorData> getListBySession(String session);
+
+    List<SensorData> getListByDate(String date);
 
     List<SensorData> getAllData();
     void delete(long id);
