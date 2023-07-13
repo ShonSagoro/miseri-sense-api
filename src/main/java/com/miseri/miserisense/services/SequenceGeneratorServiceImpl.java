@@ -1,4 +1,4 @@
-package com.miseri.miserisense.services.Impls;
+package com.miseri.miserisense.services;
 
 import com.miseri.miserisense.models.DatabaseSequence;
 import org.springframework.beans.factory.annotation.Autowired;

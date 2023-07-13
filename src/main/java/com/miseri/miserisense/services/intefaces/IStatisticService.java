@@ -1,5 +1,6 @@
-package com.miseri.miserisense.services;
+package com.miseri.miserisense.services.intefaces;
 
+import com.miseri.miserisense.controllers.dtos.request.CorrelationRequest;
 import com.miseri.miserisense.controllers.dtos.response.BaseResponse;
 
 public interface IStatisticService {
@@ -15,5 +16,7 @@ public interface IStatisticService {
     BaseResponse getHumidityDataFrequency();
 
     BaseResponse getTemperatureDataFrecuency();
+
+    BaseResponse getCorrelation(CorrelationRequest request);
 
 }

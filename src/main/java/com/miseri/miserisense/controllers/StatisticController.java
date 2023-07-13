@@ -1,13 +1,12 @@
 package com.miseri.miserisense.controllers;
 
 
+import com.miseri.miserisense.controllers.dtos.request.CorrelationRequest;
 import com.miseri.miserisense.controllers.dtos.response.BaseResponse;
-import com.miseri.miserisense.services.IStatisticService;
+import com.miseri.miserisense.services.intefaces.IStatisticService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/statistic")
@@ -45,5 +44,9 @@ public class StatisticController {
         return service.getTemperatureDataFrecuency().apply();
     }
 
+    @PostMapping("/correlation")
+    public ResponseEntity<BaseResponse> getCorrelation(@RequestBody CorrelationRequest request){
+        return service.getCorrelation(request).apply();
+    }
 
 }

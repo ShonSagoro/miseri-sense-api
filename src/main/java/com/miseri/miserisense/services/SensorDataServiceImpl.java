@@ -1,5 +1,7 @@
-package com.miseri.miserisense.services.Impls;
+package com.miseri.miserisense.services;
 
+import com.google.gson.Gson;
+import com.miseri.miserisense.configuration.SocketIOClient;
 import com.miseri.miserisense.controllers.advice.exceptions.NotFoundException;
 import com.miseri.miserisense.controllers.dtos.request.CreateSensorDataRequest;
 import com.miseri.miserisense.controllers.dtos.request.UpdateSensorDataRequest;
@@ -7,7 +9,7 @@ import com.miseri.miserisense.controllers.dtos.response.BaseResponse;
 import com.miseri.miserisense.controllers.dtos.response.GetSensorDataResponse;
 import com.miseri.miserisense.models.SensorData;
 import com.miseri.miserisense.repositories.ISensorDataRepository;
-import com.miseri.miserisense.services.ISensorDataService;
+import com.miseri.miserisense.services.intefaces.ISensorDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,9 @@ import java.util.stream.Collectors;
 public class SensorDataServiceImpl implements ISensorDataService {
     @Autowired
     private ISensorDataRepository repository;
+
+    @Autowired
+    private SocketIOClient client;
 
     @Autowired
     private SequenceGeneratorServiceImpl sequenceGeneratorService;
@@ -39,10 +44,23 @@ public class SensorDataServiceImpl implements ISensorDataService {
     public BaseResponse create(CreateSensorDataRequest request) {
         SensorData sensorData = repository.save(toSensorData(request));
         GetSensorDataResponse response= toGetSensorDataResponse(sensorData);
-
+        client.sendData(toJson(response));
         return BaseResponse.builder()
                 .data(response)
                 .message("The sensor data has been created with id: "+ response.getId())
+                .success(true)
+                .httpStatus(HttpStatus.CREATED).build();
+    }
+
+    @Override
+    public BaseResponse createList(List<CreateSensorDataRequest> request) {
+        List<SensorData> listSave=request.stream().map(this::toSensorData).toList();
+        listSave.forEach(sensorData -> repository.save(sensorData));
+        List<GetSensorDataResponse> responses=listSave.stream().map(this::toGetSensorDataResponse).toList();
+        client.sendListData(toJson(responses));
+        return BaseResponse.builder()
+                .data(responses)
+                .message("All data sensor saved bro")
                 .success(true)
                 .httpStatus(HttpStatus.CREATED).build();
     }
@@ -57,6 +75,44 @@ public class SensorDataServiceImpl implements ISensorDataService {
                 .message("The sensor data has been updated with id: "+ response.getId())
                 .success(true)
                 .httpStatus(HttpStatus.ACCEPTED).build();
+    }
+
+    @Override
+    public BaseResponse getAllBySession(String session) {
+        List<GetSensorDataResponse> responses=repository.findBySession(session)
+                .stream()
+                .map(this::toGetSensorDataResponse)
+                .toList();
+
+        return BaseResponse.builder()
+                .data(responses)
+                .message("The sensor data has been found with the session"+ session)
+                .success(true)
+                .httpStatus(HttpStatus.OK).build();
+    }
+
+    @Override
+    public BaseResponse getAllByDate(String date) {
+        List<GetSensorDataResponse> responses=repository.findByDate(date)
+                .stream()
+                .map(this::toGetSensorDataResponse)
+                .toList();
+
+        return BaseResponse.builder()
+                .data(responses)
+                .message("The sensor data has been found with the date"+ date)
+                .success(true)
+                .httpStatus(HttpStatus.OK).build();
+    }
+
+    @Override
+    public List<SensorData> getListBySession(String session) {
+        return repository.findBySession(session);
+    }
+
+    @Override
+    public List<SensorData> getListByDate(String date) {
+        return repository.findByDate(date);
     }
 
     @Override
@@ -149,6 +205,7 @@ public class SensorDataServiceImpl implements ISensorDataService {
         return response;
     }
 
+
     private SensorData toSensorData(CreateSensorDataRequest request){
         SensorData sensorData = new SensorData();
         sensorData.setId(sequenceGeneratorService.generateSequence(SensorData.SEQUENCE_NAME));
@@ -159,5 +216,15 @@ public class SensorDataServiceImpl implements ISensorDataService {
         sensorData.setDeviceId(request.getDeviceId());
         sensorData.setSession(request.getSession());
         return sensorData;
+    }
+
+    private String toJson(GetSensorDataResponse response){
+        Gson gson = new Gson();
+        return gson.toJson(response);
+    }
+
+    private String toJson(List<GetSensorDataResponse> response){
+        Gson gson = new Gson();
+        return gson.toJson(response);
     }
 }

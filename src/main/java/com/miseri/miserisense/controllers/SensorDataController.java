@@ -1,11 +1,14 @@
 package com.miseri.miserisense.controllers;
 
+import com.miseri.miserisense.configuration.SocketIOClient;
 import com.miseri.miserisense.controllers.dtos.request.*;
 import com.miseri.miserisense.controllers.dtos.response.BaseResponse;
-import com.miseri.miserisense.services.ISensorDataService;
+import com.miseri.miserisense.services.intefaces.ISensorDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/sensor")
@@ -21,6 +24,11 @@ public class SensorDataController {
     @PostMapping()
     public ResponseEntity<BaseResponse> create(@RequestBody CreateSensorDataRequest request){
         return service.create(request).apply();
+    }
+
+    @PostMapping("/list")
+    public ResponseEntity<BaseResponse> createList(@RequestBody List<CreateSensorDataRequest> request){
+        return service.createList(request).apply();
     }
 
     @GetMapping("/{id}")

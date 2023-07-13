@@ -1,4 +1,4 @@
-package com.miseri.miserisense.services.Impls;
+package com.miseri.miserisense.services;
 
 import com.miseri.miserisense.controllers.advice.exceptions.NotFoundException;
 import com.miseri.miserisense.controllers.dtos.request.CreateDeviceRequest;
@@ -6,7 +6,7 @@ import com.miseri.miserisense.controllers.dtos.response.BaseResponse;
 import com.miseri.miserisense.controllers.dtos.response.GetDeviceResponse;
 import com.miseri.miserisense.models.Device;
 import com.miseri.miserisense.repositories.IDeviceRepository;
-import com.miseri.miserisense.services.IDeviceService;
+import com.miseri.miserisense.services.intefaces.IDeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
