@@ -19,11 +19,16 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import lombok.NonNull;
 
+
+import java.util.Arrays;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -42,12 +47,9 @@ public class WebSecurityConfig {
     private PasswordEncoder passwordEncoder;
 
 
-    @Value("${miseri.security.allow-request}")
-    private String[] allowedPaths;
 
     @Bean
     public WebMvcConfigurer corsConfigurer() {
-
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(@NonNull CorsRegistry registry) {
@@ -60,6 +62,9 @@ public class WebSecurityConfig {
         };
     }
 
+    @Value("${miseri.security.allow-request}")
+    private String[] allowedPaths;
+
     @Bean
     SecurityFilterChain web(HttpSecurity http,  AuthenticationManager authManager) throws Exception {
 
@@ -68,7 +73,7 @@ public class WebSecurityConfig {
         authenticationFilter.setFilterProcessesUrl("/user/sign-in");
 
         return http.csrf(AbstractHttpConfigurer::disable)
-                .cors(AbstractHttpConfigurer::disable)
+                .cors(withDefaults())
                 .exceptionHandling(Customizer.withDefaults())
                 .addFilter(authenticationFilter)
                 .addFilterBefore(authorizationFilter, UserAuthenticationFilter.class)
