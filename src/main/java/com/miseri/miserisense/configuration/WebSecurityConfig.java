@@ -44,6 +44,7 @@ public class WebSecurityConfig {
 
     @Value("${miseri.security.allow-request}")
     private String[] allowedPaths;
+
     @Bean
     public WebMvcConfigurer corsConfigurer() {
 
@@ -67,7 +68,7 @@ public class WebSecurityConfig {
         authenticationFilter.setFilterProcessesUrl("/user/sign-in");
 
         return http.csrf(AbstractHttpConfigurer::disable)
-                .cors(withDefaults())
+                .cors(AbstractHttpConfigurer::disable)
                 .exceptionHandling(Customizer.withDefaults())
                 .addFilter(authenticationFilter)
                 .addFilterBefore(authorizationFilter, UserAuthenticationFilter.class)
