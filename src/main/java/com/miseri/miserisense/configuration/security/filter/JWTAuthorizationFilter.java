@@ -22,7 +22,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
         String bearerToken = request.getHeader("Authorization");
 
-        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+        if (bearerToken != null) {
             String token = bearerToken.replace("Bearer ", "");
             UsernamePasswordAuthenticationToken userNamePAT = TokenUtil.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(userNamePAT);
