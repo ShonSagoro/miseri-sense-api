@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class TokenUtil {
 
-    private static final String ACCESS_TOKEN_SECRET_KEY = "4qhq8LrEBfYcaRHxhdb9zURb2rf8e7Ud";
+    private static final String ACCESS_TOKEN_SECRET_KEY = "8yRKIzIQhNvmzm-BHAVCrDOogl1B9f32i-gNjbhqvsE";
     private static final Long LIFE_TOKEN = 3_600_000L;
     private TokenUtil() {}
 
